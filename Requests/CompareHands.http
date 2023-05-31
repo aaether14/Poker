@@ -1,0 +1,21 @@
+POST http://localhost:5000/api/v1/compare_hands
+Content-Type: application/json
+
+{
+  "hands": [
+    [
+      "C9",
+      "CK",
+      "CQ",
+      "CJ",
+      "HT"
+    ],
+    [
+      "S5",
+      "H5",
+      "D5",
+      "SA",
+      "DK"
+    ]
+  ]
+}

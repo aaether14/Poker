@@ -1,0 +1,3 @@
+@n = 3
+
+GET http://localhost:5000/api/v1/roll_hands?n={{ n }}

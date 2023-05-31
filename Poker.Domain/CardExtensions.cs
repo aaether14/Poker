@@ -21,7 +21,7 @@ public static class CardExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(card), "Invalid card value.")
         };
 
-    public static CardSuit GetColor(this Card card) =>
+    public static CardSuit GetSuit(this Card card) =>
         card switch
         {
             Card.SA or Card.S2 or Card.S3 or Card.S4 or Card.S5 or Card.S6 or Card.S7 or Card.S8 or Card.S9 or Card.ST or Card.SJ or Card.SQ or Card.SK => CardSuit.Spades,

@@ -1,21 +1,33 @@
-using Microsoft.AspNetCore.Http.Json;
 using Poker.Domain;
-using Poker.JsonConverters;
+using Poker.Contracts;
+using Poker.HandsApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<JsonOptions>(options => 
-{
-    options.SerializerOptions.Converters.Add(new EnumStringConverter<Card>());
-});
+builder.Services.AddJsonOptions();
 
 var app = builder.Build();
 
-app.MapGet("/api/v1/hands", (int n) => 
+app.MapGet("/api/v1/roll_hands", (int n) => 
 {
     Deck deck = new Deck(new Random());
-    List<Hand> hands = Enumerable.Range(0, n).Select(_ => deck.DealHand()).ToList();
-    return hands;
+    List<List<Card>> hands = Enumerable.Range(0, n)
+        .Select(_ => deck.DealHand())
+        .Select(hand => hand.Cards)
+        .ToList();
+
+    return new GetHandsResponse(hands);
+});
+
+app.MapPost("/api/v1/compare_hands", (CompareHandsRequest request) => 
+{   
+    List<List<Card>> hands = request.Hands
+        .Select(handCards => new Hand(handCards))
+        .OrderDescending()
+        .Select(hand => hand.Cards)
+        .ToList();
+
+    return new GetHandsResponse(hands);
 });
 
 app.Run();

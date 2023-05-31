@@ -1,4 +1,4 @@
-namespace Poker.JsonConverters;
+namespace Poker.HandsApi.JsonConverters;
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
