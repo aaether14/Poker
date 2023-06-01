@@ -1,5 +1,3 @@
-using Poker.Domain;
-
 namespace Poker.Contracts;
 
-public record GetHandsResponse(List<List<Card>> Hands);
+public record GetHandsResponse(List<List<string>> Hands);

@@ -34,69 +34,66 @@ public class Hand : IComparable<Hand>
             .Select(c => c.GetRank())
             .Max();
 
-        List<(int Count, int Rank)> countRanks = Cards
+        bool isStraight = Cards.Count == Hand.CardsInHand 
+            && (maxRank - minRank == Hand.CardsInHand - 1);
+
+        // Group cards by rank and sort them such that cards which there are more of come first.
+        // On equal counts, higher ranked cards come first.
+        List<(int Count, int Rank)> countAndRankPairs = Cards
             .GroupBy(c => c.GetRank())
             .Select(g => (g.Count(), g.Key))
             .OrderDescending()
             .ToList();
 
-        bool isStraight = Cards.Count == Hand.CardsInHand 
-            && (maxRank - minRank == Hand.CardsInHand - 1);
-
         if (isStraight && isFlush)
         {
-            return (HandType.StraightFlush, ComputeTieBreaker(maxRank));
+            return (HandType.StraightFlush, maxRank);
         }
-        else if (countRanks[0].Count == 4)
+        else if (countAndRankPairs[0].Count == 4)
         {
-            return (HandType.FourOfAKind, 
-                ComputeTieBreaker(countRanks.Select(countRank => countRank.Rank).ToArray()));
+            return (HandType.FourOfAKind, ComputeTieBreaker(countAndRankPairs));
         }
-        else if (countRanks[0].Count == 3 && countRanks[1].Count == 2)
+        else if (countAndRankPairs[0].Count == 3 && countAndRankPairs[1].Count == 2)
         {
-            return (HandType.FullHouse, 
-                ComputeTieBreaker(countRanks.Select(countRank => countRank.Rank).ToArray()));
+            return (HandType.FullHouse, ComputeTieBreaker(countAndRankPairs));
         }
         else if (isFlush)
         {
-            return (HandType.Flush, 
-                ComputeTieBreaker(countRanks.Select(countRank => countRank.Rank).ToArray()));
+            return (HandType.Flush, ComputeTieBreaker(countAndRankPairs));
         }
         else if (isStraight)
         {
-            return (HandType.Straight, ComputeTieBreaker(maxRank));
+            return (HandType.Straight, maxRank);
         }
-        else if (countRanks[0].Count == 3)
+        else if (countAndRankPairs[0].Count == 3)
         {
-            return (HandType.ThreeOfAKind, 
-                ComputeTieBreaker(countRanks.Select(countRank => countRank.Rank).ToArray()));
+            return (HandType.ThreeOfAKind, ComputeTieBreaker(countAndRankPairs));
         }
-        else if (countRanks[0].Count == 2 && countRanks[1].Count == 2)
+        else if (countAndRankPairs[0].Count == 2 && countAndRankPairs[1].Count == 2)
         {
-            return (HandType.TwoPair, 
-                ComputeTieBreaker(countRanks.Select(countRank => countRank.Rank).ToArray()));
+            return (HandType.TwoPair, ComputeTieBreaker(countAndRankPairs));
         }
-        else if (countRanks[0].Count == 2)
+        else if (countAndRankPairs[0].Count == 2)
         {
-             return (HandType.OnePair, 
-                ComputeTieBreaker(countRanks.Select(countRank => countRank.Rank).ToArray()));
+             return (HandType.OnePair, ComputeTieBreaker(countAndRankPairs));
         }
         else 
         {
-            return (HandType.HighCard, 
-                ComputeTieBreaker(countRanks.Select(countRank => countRank.Rank).ToArray()));
+            return (HandType.HighCard, ComputeTieBreaker(countAndRankPairs));
         }
     }
 
-    private int ComputeTieBreaker(params int[] values)
+    // Combine all values into a composite tiebreaker by using the "Card.SA.GetRank() + 1" number base .
+    // This means that tiebreaker values which are deemed more important always trump those considered less important.
+    private int ComputeTieBreaker(List<(int Count, int Rank)> countAndRankPairs)
     {
         int tieBreaker = 0;
         int maxRank = Card.SA.GetRank() + 1;
         int power = 1;
 
-        for (int i = values.Length - 1; i >= 0; i--)
+        for (int i = countAndRankPairs.Count - 1; i >= 0; i--)
         {
-            tieBreaker += values[i] * power;
+            tieBreaker += countAndRankPairs[i].Rank * power;
             power *= maxRank;
         }
 
