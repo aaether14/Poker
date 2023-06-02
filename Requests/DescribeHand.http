@@ -1,0 +1,12 @@
+POST http://localhost:5000/api/v1/hands/describe
+Content-Type: application/json
+
+{
+    "hand": [
+      "SA",
+      "SK",
+      "SQ",
+      "SJ",
+      "DT"
+    ]
+}

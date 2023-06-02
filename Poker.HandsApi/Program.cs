@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<IValidator<DescribeHandRequest>, DescribeHandRequestValidator>();
 builder.Services.AddScoped<IValidator<CompareHandsRequest>, CompareHandsRequestValidator>();
 
 var app = builder.Build();
@@ -38,7 +39,9 @@ app.Use(async (context, next) =>
     }
 });
 
-app.MapGet("/api/v1/roll_hands", (int n) => 
+var handsApi = app.MapGroup("api/v1/hands");
+
+handsApi.MapGet("/roll", (int n) => 
 {
     Deck deck = new Deck(new Random());
     List<List<string>> hands = Enumerable.Range(0, n)
@@ -46,10 +49,24 @@ app.MapGet("/api/v1/roll_hands", (int n) =>
         .Select(hand => hand.Cards.Select(c => c.ToString()).ToList())
         .ToList();
 
-    return new GetHandsResponse(hands);
+    return new RollHandsResponse(hands);
 });
 
-app.MapPost("/api/v1/compare_hands", async (IValidator<CompareHandsRequest> validator, CompareHandsRequest request) => 
+handsApi.MapPost("/describe", async (IValidator<DescribeHandRequest> validator, DescribeHandRequest request) => 
+{
+    ValidationResult validationResult = await validator.ValidateAsync(request);
+    if (!validationResult.IsValid)
+    {
+        return Results.ValidationProblem(validationResult.ToDictionary());
+    }
+
+    var (handType, tieBreaker) = new Hand(request.Hand.Select(c => Enum.Parse<Card>(c)).ToList())
+        .GetRank();
+
+    return Results.Ok(new DescribeHandResponse(handType.ToString(), tieBreaker));    
+});
+
+handsApi.MapPost("/compare", async (IValidator<CompareHandsRequest> validator, CompareHandsRequest request) => 
 {   
     ValidationResult validationResult = await validator.ValidateAsync(request);
     if (!validationResult.IsValid)
@@ -63,7 +80,7 @@ app.MapPost("/api/v1/compare_hands", async (IValidator<CompareHandsRequest> vali
         .Select(hand => hand.Cards.Select(c => c.ToString()).ToList())
         .ToList();
 
-    return Results.Ok(new GetHandsResponse(hands));
+    return Results.Ok(new CompareHandsResponse(hands));
 });
 
 app.Run();
