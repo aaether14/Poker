@@ -3,6 +3,7 @@ namespace Poker.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Poker.Domain.Exceptions;
 
 public class Deck
 {
@@ -21,7 +22,7 @@ public class Deck
     {
         if (_topCardIndex < 0)
         {
-            throw new InvalidOperationException("The deck is empty. All cards have been dealt.");
+            throw new AllCardsAlreadyDealtException("The deck is empty. All cards have been dealt.");
         }
 
         int index = _random.Next(0, _topCardIndex + 1);

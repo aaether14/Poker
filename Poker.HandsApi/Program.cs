@@ -3,12 +3,40 @@ using Poker.Contracts;
 using FluentValidation;
 using Poker.HandsApi.Validators;
 using FluentValidation.Results;
+using Poker.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IValidator<CompareHandsRequest>, CompareHandsRequestValidator>();
 
 var app = builder.Build();
+
+app.Use(async (context, next) => 
+{
+    try
+    {
+        await next.Invoke(context);
+    }
+    catch (DomainException domainException) 
+    {
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        await context.Response.WriteAsJsonAsync(new ProblemDetails()
+        {
+            Title = domainException.GetType().ToString(),
+            Detail = domainException.Message
+        });
+    }
+    catch (Exception exception)
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        await context.Response.WriteAsJsonAsync(new ProblemDetails()
+        {
+            Title = "Internal server error.",
+            Detail = exception.Message
+        });
+    }
+});
 
 app.MapGet("/api/v1/roll_hands", (int n) => 
 {

@@ -2,6 +2,7 @@ namespace Poker.Domain;
 
 using System;
 using System.Collections.Generic;
+using Poker.Domain.Exceptions;
 
 public class Hand : IComparable<Hand>
 {
@@ -14,7 +15,7 @@ public class Hand : IComparable<Hand>
     {
         if (dealtCards.Distinct().Count() != CardsInHand)
         {
-            throw new ArgumentException("A hand must contain exactly 5 distinct cards.", nameof(dealtCards));
+            throw new InvalidHandException("A hand must contain exactly 5 distinct cards.");
         }
 
         Cards = new List<Card>(dealtCards);

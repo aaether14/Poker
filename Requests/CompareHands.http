@@ -4,18 +4,25 @@ Content-Type: application/json
 {
   "hands": [
     [
-      "C9",
-      "CK",
-      "CQ",
-      "CJ",
-      "HT"
+      "DJ",
+      "D3",
+      "C4",
+      "S6",
+      "C7"
     ],
     [
-      "S5",
       "H5",
-      "D5",
-      "SA",
-      "DK"
+      "H7",
+      "SK",
+      "DK",
+      "CJ"
+    ],
+    [
+      "CA",
+      "HJ",
+      "ST",
+      "S8",
+      "SA"
     ]
   ]
 }
