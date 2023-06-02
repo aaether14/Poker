@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.HandsApi", "Poker.Han
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.Contracts", "Poker.Contracts\Poker.Contracts.csproj", "{88627B69-C02D-47DB-B303-E257C1351D33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.Domain.Tests", "Poker.Domain.Tests\Poker.Domain.Tests.csproj", "{8B9E46EA-FD3A-4143-92CC-2F83B051CDD3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.Domain.Tests", "Poker.Domain.Tests\Poker.Domain.Tests.csproj", "{D13E7C7D-F786-41F7-871E-71816975BAC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +32,9 @@ Global
 		{88627B69-C02D-47DB-B303-E257C1351D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88627B69-C02D-47DB-B303-E257C1351D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88627B69-C02D-47DB-B303-E257C1351D33}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B9E46EA-FD3A-4143-92CC-2F83B051CDD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B9E46EA-FD3A-4143-92CC-2F83B051CDD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B9E46EA-FD3A-4143-92CC-2F83B051CDD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B9E46EA-FD3A-4143-92CC-2F83B051CDD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13E7C7D-F786-41F7-871E-71816975BAC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13E7C7D-F786-41F7-871E-71816975BAC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13E7C7D-F786-41F7-871E-71816975BAC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13E7C7D-F786-41F7-871E-71816975BAC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

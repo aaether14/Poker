@@ -9,6 +9,7 @@ COPY *.sln .
 COPY Poker.HandsApi/Poker.HandsApi.csproj Poker.HandsApi/
 COPY Poker.Contracts/Poker.Contracts.csproj Poker.Contracts/
 COPY Poker.Domain/Poker.Domain.csproj Poker.Domain/
+COPY Poker.Domain.Tests/Poker.Domain.Tests.csproj Poker.Domain.Tests/
 RUN dotnet restore
 
 # Copy the entire project directory to the container
