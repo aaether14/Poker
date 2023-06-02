@@ -8,11 +8,21 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddScoped<IValidator<DescribeHandRequest>, DescribeHandRequestValidator>();
 builder.Services.AddScoped<IValidator<CompareHandsRequest>, CompareHandsRequestValidator>();
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// Exception handler.
 app.Use(async (context, next) => 
 {
     try
@@ -50,7 +60,10 @@ handsApi.MapGet("/roll", (int n) =>
         .ToList();
 
     return new RollHandsResponse(hands);
-});
+})
+.WithName("RollHands")
+.Produces<RollHandsResponse>()
+.WithOpenApi();
 
 handsApi.MapPost("/describe", async (IValidator<DescribeHandRequest> validator, DescribeHandRequest request) => 
 {
@@ -64,7 +77,10 @@ handsApi.MapPost("/describe", async (IValidator<DescribeHandRequest> validator, 
         .GetRank();
 
     return Results.Ok(new DescribeHandResponse(handType.ToString(), tieBreaker));    
-});
+})
+.WithName("DescribeHand")
+.Produces<DescribeHandResponse>()
+.WithOpenApi();
 
 handsApi.MapPost("/compare", async (IValidator<CompareHandsRequest> validator, CompareHandsRequest request) => 
 {   
@@ -88,6 +104,9 @@ handsApi.MapPost("/compare", async (IValidator<CompareHandsRequest> validator, C
         .ToList();
 
     return Results.Ok(new CompareHandsResponse(result));
-});
+})
+.WithName("CompareHands")
+.Produces<CompareHandsResponse>()
+.WithOpenApi();
 
 app.Run();
