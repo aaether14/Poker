@@ -74,13 +74,20 @@ handsApi.MapPost("/compare", async (IValidator<CompareHandsRequest> validator, C
         return Results.ValidationProblem(validationResult.ToDictionary());
     }
 
-    List<List<string>> hands = request.Hands
+    List<Hand> hands = request.Hands
         .Select(handCards => new Hand(handCards.Select(c => Enum.Parse<Card>(c)).ToList()))
-        .OrderDescending()
-        .Select(hand => hand.Cards.Select(c => c.ToString()).ToList())
         .ToList();
 
-    return Results.Ok(new CompareHandsResponse(hands));
+    // A List<string> is the equivalent of a hand.
+    // We return a list of lists of hands to account for hands of equal rank.
+    // As such, the first list in the result is the list of all hands which tied for first position.
+    // the second list is for all hands tied for second position and so on and so forth.
+    List<List<List<string>>> result = hands.GroupBy(hand => hand.GetRank())
+        .OrderByDescending(g => g.Key)
+        .Select(g => g.Select(h => h.Cards.Select(c => c.ToString()).ToList()).ToList())
+        .ToList();
+
+    return Results.Ok(new CompareHandsResponse(result));
 });
 
 app.Run();

@@ -3,10 +3,10 @@ Content-Type: application/json
 
 {
     "hand": [
-      "SA",
-      "SK",
-      "SQ",
-      "SJ",
-      "DT"
+      "C9",
+      "CK",
+      "CQ",
+      "CJ",
+      "HT"
     ]
 }
